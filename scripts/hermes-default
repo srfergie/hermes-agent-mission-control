@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Hermy HQ bridge wrapper: restrict every bridge call to the default profile.
+exec /opt/hermes/bin/hermes --profile default "$@"

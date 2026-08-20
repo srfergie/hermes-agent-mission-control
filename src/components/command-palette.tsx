@@ -10,13 +10,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   LayoutDashboard,
-  Twitter,
-  FileText,
-  Youtube,
-  Activity,
+  Radio,
+  GraduationCap,
+  Cpu,
+  Workflow,
   Bot,
   Lightbulb,
-  Sprout,
+  BookOpen,
   ListChecks,
   Sparkles,
   CornerDownLeft,
@@ -32,16 +32,16 @@ interface NavItem {
 }
 
 const NAV: NavItem[] = [
-  { label: "Dashboard", href: "/", icon: LayoutDashboard },
-  { label: "X", href: "/x", icon: Twitter },
-  { label: "Articles", href: "/articles", icon: FileText },
-  { label: "YouTube", href: "/youtube", icon: Youtube },
-  { label: "Client Pulse", href: "/client-pulse", icon: Activity },
-  { label: "Agents", href: "/agents", icon: Bot },
-  { label: "Ideas", href: "/ideas", icon: Lightbulb },
-  { label: "Garden", href: "/garden", icon: Sprout },
+  { label: "Mission Control", href: "/", icon: LayoutDashboard },
+  { label: "AI Radar", href: "/radar", icon: Radio },
+  { label: "Study Track", href: "/study", icon: GraduationCap },
+  { label: "Local LLM Lab", href: "/lab", icon: Cpu },
+  { label: "Practical Application", href: "/application", icon: Workflow },
+  { label: "Try List", href: "/try-list", icon: Lightbulb },
   { label: "Tasks", href: "/tasks", icon: ListChecks },
+  { label: "Memory Wiki", href: "/memory-wiki", icon: BookOpen },
   { label: "Hermes", href: "/hermes", icon: Sparkles },
+  { label: "Agents", href: "/agents", icon: Bot },
 ];
 
 type Row =
