@@ -90,6 +90,28 @@ model IntelItem {
   @@index([status, publishedAt])
 }
 
+model LabExperiment {
+  id              String   @id @default(cuid())
+  title           String
+  hypothesis      String
+  intelItemId     String?
+  sourceUrl       String?
+  setup           String?
+  hardware        String?
+  modelChoice     String?
+  dataBoundary    String?
+  testSteps       String?
+  result          String?
+  decision        String?
+  nextAction      String?
+  status          String   @default("planned")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([status, updatedAt])
+  @@index([intelItemId])
+}
+
 model AgentState {
   id             String    @id
   name           String
