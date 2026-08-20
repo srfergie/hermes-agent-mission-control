@@ -112,6 +112,31 @@ model LabExperiment {
   @@index([intelItemId])
 }
 
+model StudyMilestone {
+  id          String   @id @default(cuid())
+  track       String
+  title       String
+  deadline    DateTime?
+  nextAction  String
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@index([track, status, deadline])
+}
+
+model ApplicationOpportunity {
+  id           String   @id @default(cuid())
+  title        String
+  opportunity  String
+  value        String?
+  dataBoundary String?
+  nextAction   String
+  status       String   @default("active")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  @@index([status, updatedAt])
+}
+
 model AgentState {
   id             String    @id
   name           String
