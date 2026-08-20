@@ -5,63 +5,51 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import {
   Home,
-  Twitter,
-  Play,
-  Bot,
-  Lightbulb,
-  Flower2,
-  FileText,
-  ClipboardList,
-  HeartPulse,
+  Radio,
+  GraduationCap,
   Cpu,
-  BookOpen,
   Workflow,
+  Lightbulb,
+  ClipboardList,
+  BookOpen,
+  Bot,
   Menu,
   X,
 } from "lucide-react";
 
 const navGroups = [
   {
-    name: "Overview",
+    name: "Today",
     items: [
-      { href: "/", label: "Dashboard", icon: Home },
-      { href: "/hermes", label: "Hermes", icon: Cpu },
+      { href: "/", label: "Mission Control", icon: Home },
+      { href: "/hermes", label: "Hermes", icon: Bot },
       { href: "/tasks", label: "Tasks", icon: ClipboardList },
     ],
   },
   {
-    name: "Content",
+    name: "Operating threads",
     items: [
-      { href: "/x", label: "X", icon: Twitter },
-      { href: "/content-os", label: "Pipeline", icon: Workflow },
-      { href: "/articles", label: "Articles", icon: FileText },
-      { href: "/youtube", label: "YouTube", icon: Play },
+      { href: "/study", label: "Study Track", icon: GraduationCap },
+      { href: "/radar", label: "AI Radar", icon: Radio },
+      { href: "/lab", label: "Local LLM Lab", icon: Cpu },
+      { href: "/application", label: "Practical Application", icon: Workflow },
+      { href: "/try-list", label: "Try List", icon: Lightbulb },
     ],
   },
   {
-    name: "Data",
+    name: "Knowledge",
     items: [
-      { href: "/client-pulse", label: "Client Pulse", icon: HeartPulse },
-    ],
-  },
-  {
-    name: "System",
-    items: [
-      { href: "/agents", label: "Agents", icon: Bot },
       { href: "/memory-wiki", label: "Memory Wiki", icon: BookOpen },
-      { href: "/ideas", label: "Ideas", icon: Lightbulb },
-      { href: "/garden", label: "Garden", icon: Flower2 },
     ],
   },
 ];
 
-// Mobile tab bar - only show the 5 most important
 const mobileTabsRaw = [
-  { href: "/", label: "Dashboard", icon: Home },
-  { href: "/x", label: "X", icon: Twitter },
-  { href: "/youtube", label: "YouTube", icon: Play },
-  { href: "/ideas", label: "Ideas", icon: Lightbulb },
-  { href: "/agents", label: "Agents", icon: Bot },
+  { href: "/", label: "Today", icon: Home },
+  { href: "/radar", label: "Radar", icon: Radio },
+  { href: "/study", label: "Study", icon: GraduationCap },
+  { href: "/try-list", label: "Try", icon: Lightbulb },
+  { href: "/hermes", label: "Hermes", icon: Bot },
 ];
 
 export function Sidebar() {
