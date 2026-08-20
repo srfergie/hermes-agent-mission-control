@@ -66,6 +66,24 @@ model Idea {
   @@index([type])
 }
 
+model IntelItem {
+  id          String   @id @default(cuid())
+  title       String
+  source      String
+  sourceUrl   String   @unique
+  publishedAt DateTime?
+  topic       String
+  summary     String
+  credibility String   @default("primary")
+  posture     String   @default("read")
+  urgency     String   @default("routine")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([topic, publishedAt])
+  @@index([posture, urgency])
+}
+
 model AgentState {
   id             String    @id
   name           String

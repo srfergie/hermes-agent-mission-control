@@ -1,0 +1,14 @@
+"use client";
+import { useEffect, useState } from "react";
+
+type Item={id:string;title:string;source:string;sourceUrl:string;topic:string;summary:string;posture:string;urgency:string;publishedAt:string|null};
+const postures=["ignore","monitor","read","trial","apply"];
+
+export default function RadarPage(){
+ const [items,setItems]=useState<Item[]>([]); const [busy,setBusy]=useState(false);
+ const load=()=>fetch('/api/radar').then(r=>r.json()).then(setItems).catch(()=>{});
+ useEffect(()=>{load()},[]);
+ const add=async(e:React.FormEvent<HTMLFormElement>)=>{e.preventDefault();setBusy(true);const f=new FormData(e.currentTarget);const body=Object.fromEntries(f);const r=await fetch('/api/radar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(r.ok){e.currentTarget.reset();load()}setBusy(false)};
+ const setPosture=async(id:string,posture:string)=>{await fetch('/api/radar',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,posture})});load()};
+ return <main className="max-w-5xl space-y-8 pb-16"><header className="pt-4"><p className="eyebrow">Intelligence service</p><h1 className="mt-3 text-4xl font-semibold">AI Radar</h1><p className="mt-3 text-[var(--text-2)]">Capture only developments worth a decision: ignore, monitor, read, trial or apply.</p></header><form onSubmit={add} className="panel grid gap-3 p-5 md:grid-cols-2"><input name="title" required placeholder="Headline" className="input"/><input name="source" required placeholder="Source, for example OpenAI" className="input"/><input name="sourceUrl" required type="url" placeholder="Canonical source URL" className="input"/><input name="topic" required placeholder="Topic, for example agents or local models" className="input"/><textarea name="summary" required placeholder="Why it matters and the decision needed" className="input md:col-span-2" rows={3}/><select name="posture" className="input">{postures.map(x=><option key={x}>{x}</option>)}</select><button disabled={busy} className="btn-primary">{busy?'Saving…':'Add intelligence item'}</button></form><section className="space-y-3">{items.length===0?<div className="panel p-6 text-[var(--text-2)]">No items yet. Add only material developments with a source and a decision.</div>:items.map(i=><article key={i.id} className="panel p-5"><div className="flex justify-between gap-4"><div><p className="eyebrow">{i.topic} · {i.source}</p><a href={i.sourceUrl} target="_blank" rel="noreferrer" className="mt-2 block text-lg font-semibold hover:underline">{i.title}</a></div><select value={i.posture} onChange={e=>setPosture(i.id,e.target.value)} className="input w-28">{postures.map(x=><option key={x}>{x}</option>)}</select></div><p className="mt-3 text-sm leading-6 text-[var(--text-2)]">{i.summary}</p></article>)}</section></main>;
+}
