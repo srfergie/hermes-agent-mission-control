@@ -258,6 +258,16 @@ async function runRequest(r) {
       if (!argv) throw new Error(`unknown cron op ${op}`);
       result = (await hermes(argv, { timeout: 20000 })).trim();
       await mirrorCrons();
+    } else if (r.kind === "intel.publish") {
+      const i = JSON.parse(r.prompt || "{}");
+      if (!i.title || !i.source || !i.sourceUrl || !i.topic || !i.summary) throw new Error("title, source, sourceUrl, topic and summary are required");
+      await q(
+        `INSERT INTO "IntelItem" (id, title, source, "sourceUrl", "publishedAt", topic, summary, "whatHappened", "whyItMatters", implications, "recommendedAction", credibility, posture, urgency, status, "createdAt", "updatedAt")
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,now(),now())
+         ON CONFLICT ("sourceUrl") DO UPDATE SET title=EXCLUDED.title, source=EXCLUDED.source, topic=EXCLUDED.topic, summary=EXCLUDED.summary, "whatHappened"=EXCLUDED."whatHappened", "whyItMatters"=EXCLUDED."whyItMatters", implications=EXCLUDED.implications, "recommendedAction"=EXCLUDED."recommendedAction", credibility=EXCLUDED.credibility, posture=EXCLUDED.posture, urgency=EXCLUDED.urgency, status=EXCLUDED.status, "updatedAt"=now()`,
+        [randomUUID(), i.title, i.source, i.sourceUrl, i.publishedAt || null, i.topic, i.summary, i.whatHappened || null, i.whyItMatters || null, i.implications || null, i.recommendedAction || null, i.credibility || "primary", i.posture || "read", i.urgency || "routine", i.status || "draft"]
+      );
+      result = `published intelligence item: ${i.title}`;
     } else if (r.kind === "memory.write") {
       const e = JSON.parse(r.prompt || "{}");
       const rel = writeWikiEntry(e);
