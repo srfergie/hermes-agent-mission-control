@@ -50,8 +50,8 @@
 }
 
 :root {
-  --background: #0a0b0d;
-  --foreground: #e7e8ea;
+  --background: #100d14;
+  --foreground: #f2eadf;
 }
 
 @theme inline {
@@ -170,27 +170,27 @@ textarea, input {
    never by shadow (overlays are the only exception).
    ═══════════════════════════════════════════════════════════ */
 :root {
-  /* surface ladder — depth via lighter tiers, not shadows */
-  --bg:        #0a0b0d;   /* near-black, never #000 (avoids halation) */
-  --surface-1: #101113;   /* cards */
-  --surface-2: #16181b;   /* raised / hover */
-  --surface-3: #1e2024;   /* modals, highest tier */
+  /* surface ladder — a warm ink studio, with depth from contrast not glow */
+  --bg:        #100d14;
+  --surface-1: #18131f;
+  --surface-2: #211a2a;
+  --surface-3: #2b2236;
 
-  /* hairlines carry structure */
-  --line:        rgba(255, 255, 255, 0.08);
-  --line-strong: rgba(255, 255, 255, 0.13);
+  /* warm, fine structural borders */
+  --line:        rgba(239, 224, 205, 0.09);
+  --line-strong: rgba(239, 224, 205, 0.17);
 
-  /* text ramp (contrast-checked against surfaces) */
-  --text:   #e7e8ea;   /* primary  ~15:1 */
-  --text-2: #a0a3a8;   /* secondary ~7:1 */
-  --text-3: #6b6e74;   /* tertiary — labels/decorative */
-  --text-4: #4b4e54;   /* ghost — hairline captions */
+  /* warm ivory text ramp */
+  --text:   #f2eadf;
+  --text-2: #c1b6ad;
+  --text-3: #8f817d;
+  --text-4: #62575b;
 
-  /* ONE brand accent (desaturated for dark) + semantic-only status */
-  --accent: #6ea8fe;
-  --up:     #5fd0a0;
-  --down:   #f28b82;
-  --warn:   #f5c451;
+  /* live action and signal metadata stay visually distinct */
+  --accent: #45d6cc;
+  --up:     #70d5a7;
+  --down:   #f08388;
+  --warn:   #d9ad63;
 
   /* radius — calm & precise, never toy-soft */
   --r-sm: 8px;
@@ -253,10 +253,9 @@ textarea, input {
   position: absolute;
   inset: -20%;
   background:
-    radial-gradient(72% 62% at 8% 6%, rgba(110, 168, 254, 0.14), transparent 70%),
-    radial-gradient(64% 62% at 92% 22%, rgba(95, 208, 160, 0.09), transparent 72%),
-    radial-gradient(70% 62% at 44% 80%, rgba(110, 168, 254, 0.07), transparent 74%),
-    radial-gradient(62% 60% at 98% 98%, rgba(95, 208, 160, 0.06), transparent 74%);
+    radial-gradient(76% 66% at 6% 5%, rgba(91, 57, 112, 0.22), transparent 72%),
+    radial-gradient(60% 58% at 94% 18%, rgba(69, 214, 204, 0.07), transparent 72%),
+    radial-gradient(72% 62% at 46% 96%, rgba(217, 173, 99, 0.035), transparent 76%);
   filter: blur(48px);
   animation: aurora-drift 44s ease-in-out infinite;
   will-change: transform;

@@ -24,6 +24,7 @@ import {
   Skeleton,
   Eyebrow,
 } from "@/components/ui/kit";
+import { classifyHealth } from "@/lib/health-status";
 import { HermesDispatches } from "@/components/hermes-dispatches";
 import { HermesRuns } from "@/components/hermes-runs";
 
@@ -153,8 +154,13 @@ function levelColor(l: EvLevel): string {
 
 // ── Health chip ───────────────────────────────────────────
 function HealthChip({ health }: { health: Health | null }) {
-  const online = !!health?.online;
-  const color = online ? "var(--up)" : "var(--warn)";
+  const presentation = classifyHealth(health);
+  const color = {
+    neutral: "var(--text-3)",
+    up: "var(--up)",
+    warn: "var(--warn)",
+  }[presentation.tone];
+
   return (
     <div
       className="flex items-center gap-2 rounded-full border px-3 py-1.5"
@@ -165,7 +171,7 @@ function HealthChip({ health }: { health: Health | null }) {
       }}
     >
       <span className="relative flex w-1.5 h-1.5">
-        {online && (
+        {presentation.tone === "up" && (
           <span
             className="absolute inline-flex h-full w-full rounded-full animate-ping"
             style={{ background: "color-mix(in srgb, var(--up) 60%, transparent)" }}
@@ -176,9 +182,7 @@ function HealthChip({ health }: { health: Health | null }) {
           style={{ background: color }}
         />
       </span>
-      <span className="text-[12px] font-semibold">
-        {online ? "Online" : "Offline · bridge idle"}
-      </span>
+      <span className="text-[12px] font-semibold">{presentation.label}</span>
       {health?.lastSeen && (
         <span className="num text-[10.5px] text-[var(--text-3)]">
           {timeAgo(health.lastSeen)}
@@ -745,8 +749,10 @@ export default function HermesPage() {
   const [cronSync, setCronSync] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const healthRequestId = useRef(0);
 
   const load = useCallback(async () => {
+    const requestId = ++healthRequestId.current;
     const [h, reqs, act, tk, cr] = await Promise.all([
       getJSON<Health>("/api/hermes/health"),
       getJSON<{ requests: Req[]; pending: number }>(
@@ -758,7 +764,10 @@ export default function HermesPage() {
       ),
       getJSON<{ jobs: CronJob[]; syncedAt: string }>("/api/hermes/crons"),
     ]);
-    if (h) setHealth(h);
+    if (requestId === healthRequestId.current) {
+      if (h) setHealth(h);
+      else setHealth(null);
+    }
     if (reqs) {
       setInbox(reqs.requests ?? []);
       setPending(reqs.pending ?? reqs.requests?.length ?? 0);

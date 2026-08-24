@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import { classifyHealth, type BridgeHealth } from "@/lib/health-status";
 import {
   Home,
   Radio,
@@ -55,6 +56,43 @@ const mobileTabsRaw = [
 export function Sidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [health, setHealth] = useState<BridgeHealth | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    let latestRequestId = 0;
+
+    const loadHealth = async () => {
+      const requestId = ++latestRequestId;
+      try {
+        const response = await fetch("/api/hermes/health", { cache: "no-store" });
+        if (!active || requestId !== latestRequestId) return;
+
+        if (response.ok) {
+          const payload = (await response.json()) as BridgeHealth;
+          if (active && requestId === latestRequestId) setHealth(payload);
+        } else {
+          setHealth(null);
+        }
+      } catch {
+        if (active && requestId === latestRequestId) setHealth(null);
+      }
+    };
+
+    void loadHealth();
+    const interval = window.setInterval(() => void loadHealth(), 30_000);
+    return () => {
+      active = false;
+      window.clearInterval(interval);
+    };
+  }, []);
+
+  const systemStatus = classifyHealth(health);
+  const statusColor = {
+    neutral: "var(--text-3)",
+    up: "var(--up)",
+    warn: "var(--warn)",
+  }[systemStatus.tone];
 
   // Close sidebar on route change (mobile)
   useEffect(() => {
@@ -207,12 +245,17 @@ export function Sidebar() {
 
         {/* Footer */}
         <div className="px-4 py-4 border-t border-[var(--line)]">
-          <div className="flex items-center gap-2 text-[var(--text-3)] text-[11.5px]">
-            <span className="relative flex w-1.5 h-1.5">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-[var(--up)] opacity-60 animate-ping" />
-              <span className="relative inline-flex w-1.5 h-1.5 rounded-full bg-[var(--up)]" />
+          <div className="flex items-center gap-2 text-[11.5px]" style={{ color: statusColor }}>
+            <span className="relative flex w-1.5 h-1.5" aria-hidden="true">
+              {systemStatus.tone === "up" && (
+                <span
+                  className="absolute inline-flex h-full w-full rounded-full opacity-60 animate-ping"
+                  style={{ background: statusColor }}
+                />
+              )}
+              <span className="relative inline-flex w-1.5 h-1.5 rounded-full" style={{ background: statusColor }} />
             </span>
-            <span>All systems online</span>
+            <span>{systemStatus.label}</span>
           </div>
         </div>
       </aside>
