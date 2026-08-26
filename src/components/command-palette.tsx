@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Radio,
+  Globe2,
   GraduationCap,
   Cpu,
   Workflow,
@@ -34,6 +35,7 @@ interface NavItem {
 const NAV: NavItem[] = [
   { label: "Mission Control", href: "/", icon: LayoutDashboard },
   { label: "AI Radar", href: "/radar", icon: Radio },
+  { label: "Intelligence Monitor", href: "https://si-intelligence-monitor.vercel.app/", icon: Globe2 },
   { label: "Study Track", href: "/study", icon: GraduationCap },
   { label: "Local LLM Lab", href: "/lab", icon: Cpu },
   { label: "Practical Application", href: "/application", icon: Workflow },
@@ -134,6 +136,10 @@ export function CommandPalette() {
       if (!row) return;
       if (row.kind === "nav") {
         close();
+        if (row.item.href.startsWith("http")) {
+          window.open(row.item.href, "_blank", "noopener");
+          return;
+        }
         router.push(row.item.href);
         return;
       }

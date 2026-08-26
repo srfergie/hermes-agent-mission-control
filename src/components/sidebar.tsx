@@ -7,6 +7,7 @@ import { classifyHealth, type BridgeHealth } from "@/lib/health-status";
 import {
   Home,
   Radio,
+  Globe2,
   GraduationCap,
   Cpu,
   Workflow,
@@ -32,6 +33,7 @@ const navGroups = [
     items: [
       { href: "/study", label: "Study Track", icon: GraduationCap },
       { href: "/radar", label: "AI Radar", icon: Radio },
+      { href: "https://si-intelligence-monitor.vercel.app/", label: "Intelligence", icon: Globe2 },
       { href: "/lab", label: "Local LLM Lab", icon: Cpu },
       { href: "/application", label: "Practical Application", icon: Workflow },
       { href: "/try-list", label: "Try List", icon: Lightbulb },
